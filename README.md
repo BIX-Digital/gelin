@@ -1,22 +1,14 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Gelin
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
+Package generates random doted lines in area defined by a circle.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+![example](img.png "Example")
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- Random doted lines generation within random ar defined segments of a circle.
+- Widget for representation on generated lines.
+
 
 ## Getting started
 
@@ -25,15 +17,51 @@ start using the package.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
-
 ```dart
-const like = 'sample';
+class _MyPageState extends State<MyPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 100,
+            ),
+            SizedBox(
+              height: 400,
+              width: 400,
+              child: () {
+                // Calling in random segment generator
+                var gen =
+                RandomCurvesInRandomSegmentGenerator(minEnd: 0, maxEnd: 4);
+                // Calling generation for defined segment
+                // var gen = RandomCurvesInDefinedSegmentGenerator(
+                //     minEnd: 1, maxEnd: 4, segment: Segment.bottomRight);
+                // Building a widget
+                return CurvesPlotter()
+                    .plot(distort: true, curvesGenerator: gen);
+              }(),
+            ),
+            const SizedBox(
+              height: 100,
+            ),
+            SizedBox(
+              height: 100,
+              width: 100,
+              child: FloatingActionButton(
+                  onPressed: () => setState(() {}),
+                  child: const Icon(Icons.sync)),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 ```
 
 ## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+

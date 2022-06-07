@@ -1,12 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:gelin/gelin.dart';
+import 'package:gelin/src/generators/curves_generator.dart';
 
 void main() {
   test('adds one to input values', () {
-    final calculator = Calculator();
-    expect(calculator.addOne(2), 3);
-    expect(calculator.addOne(-7), -6);
-    expect(calculator.addOne(0), 1);
+    final gen = RandomCurvesInDefinedSegmentGenerator(minEnd: 1,
+        maxEnd: 4, segment: Segment.bottomLeft);
+    var generatedLine = gen.generate((line, {pointsToDistort:2}) => line);
+    // Default amount of points should be 20
+    expect(generatedLine.coordinates.length, 20);
   });
 }
