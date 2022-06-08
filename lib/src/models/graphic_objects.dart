@@ -83,3 +83,17 @@ class Circle {
         this.color = CustomColors.circleColor,
         this.center = 0});
 }
+
+// Distortion function type definition
+typedef DistortionFunc = Array Function(Array line, {int pointsToDistort});
+
+
+enum Segment { topLeft, bottomLeft, bottomRight, topRight }
+
+
+extension ParseToString on Enum {
+  String toShortString() {
+    return toString().split('.').last;
+  }
+}
+

@@ -4,17 +4,6 @@ import 'package:scidart/numdart.dart';
 
 import '../models/graphic_objects.dart';
 
-// Distortion function type definition
-typedef DistortionFunc = Array Function(Array line, {int pointsToDistort});
-
-enum Segment { topLeft, bottomLeft, bottomRight, topRight }
-
-
-extension ParseToString on Enum {
-  String toShortString() {
-    return toString().split('.').last;
-  }
-}
 
 abstract class CurvesGenerator {
   final double maxAngle = 6.0;
