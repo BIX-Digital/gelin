@@ -46,6 +46,16 @@ class AdjustableCurve2D {
     }
   }
 
+  List getCoordinatesStd() {
+    var x = Array([]);
+    var y = Array([]);
+    for (var i=0; i < coordinates.length; i++) {
+      x.add(coordinates[i].x);
+      y.add(coordinates[i].y);
+    }
+    return [standardDeviation(x), standardDeviation(y)];
+  }
+
   @override
   String toString() {
     return "AdjustableCurve2D(coordinates: $coordinates)";
@@ -85,10 +95,12 @@ class Circle {
 }
 
 // Distortion function type definition
-typedef DistortionFunc = Array Function(Array line, {int pointsToDistort});
+typedef DistortionFunc = AdjustableCurve2D Function(AdjustableCurve2D curve, {int pointsToDistort});
 
 
 enum Segment { topLeft, bottomLeft, bottomRight, topRight }
+
+enum SpacePosition { horizontal, vertical}
 
 
 extension ParseToString on Enum {
