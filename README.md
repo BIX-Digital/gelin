@@ -32,12 +32,8 @@ class _MyPageState extends State<MyPage> {
               height: 400,
               width: 400,
               child: () {
-                // Calling in random segment generator
-                var gen =
-                RandomCurvesInRandomSegmentGenerator(minEnd: 0, maxEnd: 4);
-                // Calling generation for defined segment
-                // var gen = RandomCurvesInDefinedSegmentGenerator(
-                //     minEnd: 1, maxEnd: 4, segment: Segment.bottomRight);
+                // Calling in random generator
+                var gen = ArcminGenerator();
                 // Building a widget
                 return CurvesPlotter()
                     .plot(distort: true, curvesGenerator: gen);
