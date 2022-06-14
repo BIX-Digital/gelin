@@ -67,9 +67,10 @@ class ArcminGenerator {
         int pointsToDistort = 2,
         bool distort = false,
         bool rotate = false,
+        Segment? segment,
       }) {
     checkGenerationPreconditions(distanceBetweenPoints);
-    var randomCurve =  generateRandomCurve(distanceBetweenPoints);
+    var randomCurve =  generateRandomCurve(distanceBetweenPoints, segment: segment);
     if (func != null && distort) {
       randomCurve = func(randomCurve);
     }
@@ -85,8 +86,8 @@ class ArcminGenerator {
     }
   }
 
-  AdjustableCurve2D generateRandomCurve(double distanceBetweenPoints) {
-      var segment = getRandomSegment();
+  AdjustableCurve2D generateRandomCurve(double distanceBetweenPoints, {Segment? segment}) {
+      segment ??= getRandomSegment();
       var spacePosition = getRandomSpacePosition();
       return generateCurve(distanceBetweenPoints, segment, spacePosition);
   }

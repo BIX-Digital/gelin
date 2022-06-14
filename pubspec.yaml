@@ -1,6 +1,6 @@
 name: gelin
 description: A Flutter for random lines generation within a circle area.
-version: 0.1.1
+version: 0.1.2
 homepage: https://github.com/BIX-Digital/gelin
 
 environment:
