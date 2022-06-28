@@ -9,24 +9,8 @@ import '../../styles/colors.dart';
 
 class CurvesPlotter {
   final logger = Logger();
-  // For debugging purposes curves can be drawn
-  Widget plot(
-      {DistortionFunc func = simpleDistortionFunc,
-        int pointsToDistort = 2,
-        bool distort = false,
-        required ArcminGenerator arcminGenerator}) {
-    AdjustableCurve2D curve = arcminGenerator.generate(15, func,
-        pointsToDistort: pointsToDistort, distort: distort);
 
-    var seriesDistorted = Series<Coord, double>(
-      id: 'Distorted curve',
-      domainFn: (Coord coord, _) => coord.x,
-      measureFn: (Coord coord, _) => coord.y,
-      radiusPxFn: (Coord coord, _) => 1.5,
-      colorFn: (Coord coord, _) => CustomColors.lineColor,
-      data: curve.coordinates,
-    );
-
+  List<Series<dynamic, num>> generateTestChartBackgroundAttributes() {
     var seriesBorders = Series<Coord, double>(
       id: 'Borders invisible',
       domainFn: (Coord coord, _) => coord.x,
@@ -64,24 +48,45 @@ class CurvesPlotter {
       data: circles,
       fillColorFn: (Circle circle, _) => CustomColors.transparent,
       strokeWidthPxFn: (Circle circle, _) => 2,
-    ); // Accessor function that associates each datum with a symbol renderer.
-    // ..setAttribute(
-    //     pointSymbolRendererFnKey, (int index) => circles[index].shape);
+    );
+    return [seriesBorders, seriesBordersOnAxis, seriesCenter, seriesCircle];
+  }
+
+  Series<dynamic, num> buildLineSeries(AdjustableCurve2D curve) {
+    return Series<Coord, double>(
+      id: 'Distorted curve',
+      domainFn: (Coord coord, _) => coord.x,
+      measureFn: (Coord coord, _) => coord.y,
+      radiusPxFn: (Coord coord, _) => 1.5,
+      colorFn: (Coord coord, _) => CustomColors.lineColor,
+      data: curve.coordinates,
+    );
+  }
+
+  // For debugging purposes curves can be drawn
+  Widget plot(
+      {DistortionFunc func = simpleDistortionFunc,
+        int pointsToDistort = 2,
+        bool distort = false,
+        required ArcminGenerator arcminGenerator}) {
+    AdjustableCurve2D curve = arcminGenerator.generate(15, func,
+        pointsToDistort: pointsToDistort, distort: distort);
+
+    return buildLineScatterPlotWidget(curve);
+  }
+
+  ScatterPlotChart buildLineScatterPlotWidget(AdjustableCurve2D curve) {
+    var series = generateTestChartBackgroundAttributes();
+    var seriesDistorted = buildLineSeries(curve);
+    series.add(seriesDistorted);
 
     return ScatterPlotChart(
-      [seriesCircle, seriesDistorted, seriesBorders, seriesBordersOnAxis, seriesCenter],
+      series,
       animate: true,
       domainAxis: const NumericAxisSpec(
-        // viewport: NumericExtents(-360.0, 360.0),
         tickProviderSpec: BasicNumericTickProviderSpec(
-          // Vertical axis every 2 ticks from 0 to 10
-            // dataIsInWholeNumbers: true,
             zeroBound: false,
-            // desiredTickCount: 7
         ),
-      ),
-      primaryMeasureAxis: const NumericAxisSpec(
-          // tickProviderSpec: BasicNumericTickProviderSpec(desiredTickCount: 7),
       ),
     );
   }
