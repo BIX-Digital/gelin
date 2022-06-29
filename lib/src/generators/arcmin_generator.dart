@@ -81,7 +81,9 @@ class ArcminGenerator {
     if ((distanceBetweenPoints < 12) && (distanceBetweenPoints > 120)) {
       throw Exception('Distance between points should be in space [12, 120]');
     }
-    if (maxCurveLength / distanceBetweenPoints < 3) {
+    var segments = maxCurveLength ~/ distanceBetweenPoints;
+    var points = segments + 1;
+    if (points < 3) {
       throw Exception('There is no enough length to build a line. At least 3 points required.');
     }
   }
