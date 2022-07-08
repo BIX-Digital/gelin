@@ -10,14 +10,20 @@ import '../../styles/colors.dart';
 class CurvesPlotter {
   final logger = Logger();
 
-  List<Series<dynamic, num>> generateTestChartBackgroundAttributes() {
+  List<Series<dynamic, num>> generateTestChartBackgroundAttributes(
+      {bool withCircularArea: true}) {
     var seriesBorders = Series<Coord, double>(
       id: 'Borders invisible',
       domainFn: (Coord coord, _) => coord.x,
       measureFn: (Coord coord, _) => coord.y,
       radiusPxFn: (Coord coord, _) => 1.5,
       colorFn: (Coord coord, _) => Color.transparent,
-      data: [Coord(360.0, 360.0), Coord(360.0, -360.0), Coord(-360.0, -360.0), Coord(-360.0, 360.0)],
+      data: [
+        Coord(360.0, 360.0),
+        Coord(360.0, -360.0),
+        Coord(-360.0, -360.0),
+        Coord(-360.0, 360.0)
+      ],
     );
 
     var seriesBordersOnAxis = Series<Coord, double>(
@@ -26,7 +32,12 @@ class CurvesPlotter {
       measureFn: (Coord coord, _) => coord.y,
       radiusPxFn: (Coord coord, _) => 1.5,
       colorFn: (Coord coord, _) => Color.black,
-      data: [Coord(360.0, 0), Coord(0, -360.0), Coord(-360.0, 0), Coord(0, 360.0)],
+      data: [
+        Coord(360.0, 0),
+        Coord(0, -360.0),
+        Coord(-360.0, 0),
+        Coord(0, 360.0)
+      ],
     );
 
     var seriesCenter = Series<Coord, double>(
@@ -38,18 +49,24 @@ class CurvesPlotter {
       data: [Coord(0, 0)],
     );
 
-    var circles = [Circle()];
-    var seriesCircle = Series<Circle, double>(
-      id: 'Circle',
-      domainFn: (Circle circle, _) => circle.center,
-      measureFn: (Circle circle, _) => 0,
-      radiusPxFn: (Circle circle, _) => circle.radius * 26,
-      colorFn: (Circle circle, _) => circle.color,
-      data: circles,
-      fillColorFn: (Circle circle, _) => CustomColors.transparent,
-      strokeWidthPxFn: (Circle circle, _) => 2,
-    );
-    return [seriesBorders, seriesBordersOnAxis, seriesCenter, seriesCircle];
+    List<Series<dynamic, num>> series = [seriesBorders, seriesBordersOnAxis, seriesCenter];
+
+    if (withCircularArea) {
+      var circles = [Circle()];
+      var seriesCircle = Series<Circle, double>(
+        id: 'Circle',
+        domainFn: (Circle circle, _) => circle.center,
+        measureFn: (Circle circle, _) => 0,
+        radiusPxFn: (Circle circle, _) => circle.radius * 26,
+        colorFn: (Circle circle, _) => circle.color,
+        data: circles,
+        fillColorFn: (Circle circle, _) => CustomColors.transparent,
+        strokeWidthPxFn: (Circle circle, _) => 2,
+      );
+      series.add(seriesCircle);
+    }
+
+    return series;
   }
 
   Series<dynamic, num> buildLineSeries(AdjustableCurve2D curve) {
@@ -66,17 +83,17 @@ class CurvesPlotter {
   // For debugging purposes curves can be drawn
   Widget plot(
       {DistortionFunc func = simpleDistortionFunc,
-        int pointsToDistort = 2,
-        bool distort = false,
-        required ArcminGenerator arcminGenerator}) {
+      int pointsToDistort = 2,
+      bool distort = false,
+      required ArcminGenerator arcminGenerator}) {
     AdjustableCurve2D curve = arcminGenerator.generate(15, func,
         pointsToDistort: pointsToDistort, distort: distort);
 
     return buildLineScatterPlotWidget(curve);
   }
 
-  ScatterPlotChart buildLineScatterPlotWidget(AdjustableCurve2D curve) {
-    var series = generateTestChartBackgroundAttributes();
+  ScatterPlotChart buildLineScatterPlotWidget(AdjustableCurve2D curve, {bool withCircularArea: true}) {
+    var series = generateTestChartBackgroundAttributes(withCircularArea: withCircularArea);
     var seriesDistorted = buildLineSeries(curve);
     series.add(seriesDistorted);
 
@@ -85,7 +102,7 @@ class CurvesPlotter {
       animate: true,
       domainAxis: const NumericAxisSpec(
         tickProviderSpec: BasicNumericTickProviderSpec(
-            zeroBound: false,
+          zeroBound: false,
         ),
       ),
     );
